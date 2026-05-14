@@ -174,10 +174,12 @@
       ];
 
       const baseStats = { hp: 50, atk: 10, def: 8, spd: 8 };
+      // Per-character stat scaling for tech-name-derived fighter stats.
       const HP_CHAR_MODIFIER = 6;
       const ATK_CHAR_MODIFIER = 4;
       const DEF_CHAR_MODIFIER = 3;
       const SPD_CHAR_MODIFIER = 5;
+      // Combat tuning values for mitigation, damage floor, randomness, and timeout.
       const DEFENSE_MITIGATION = 0.45;
       const MIN_DAMAGE = 4;
       const DAMAGE_VARIANCE = 5;
@@ -197,6 +199,7 @@
         const stats = { ...baseStats };
 
         for (const char of lower) {
+          if (!/[a-z0-9]/.test(char)) continue;
           const code = char.charCodeAt(0);
           stats.hp += code % HP_CHAR_MODIFIER;
           stats.atk += code % ATK_CHAR_MODIFIER;
@@ -366,12 +369,13 @@
 
         const playerAlive = nextAlive(playerTeam);
         const enemyAlive = nextAlive(enemyTeam);
+        const timedOut = turn > MAX_TURNS;
 
         if (playerAlive && !enemyAlive) {
           appendLog('🏆 Victory! Your tech stack dominates the battlefield.');
         } else if (!playerAlive && enemyAlive) {
           appendLog('💀 Defeat! Enemy stack overpowers your team.');
-        } else if (turn > MAX_TURNS && playerAlive && enemyAlive) {
+        } else if (timedOut && playerAlive && enemyAlive) {
           appendLog('⚖️ Draw! Battle reached the turn limit.');
         } else {
           appendLog('⚖️ Draw! Both teams are down.');
