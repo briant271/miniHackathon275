@@ -111,6 +111,9 @@
       ];
 
       const baseStats = { hp: 50, atk: 10, def: 8, spd: 8 };
+      const DEFENSE_MITIGATION = 0.45;
+      const MIN_DAMAGE = 4;
+      const MAX_TURNS = 500;
       let playerStack = [];
 
       function titleCase(str) {
@@ -127,7 +130,6 @@
 
         for (const char of lower) {
           const code = char.charCodeAt(0);
-          if (Number.isNaN(code)) continue;
           stats.hp += code % 6;
           stats.atk += code % 4;
           stats.def += code % 3;
@@ -222,9 +224,9 @@
       }
 
       function calculateDamage(attacker, defender) {
-        const base = attacker.atk - Math.floor(defender.def * 0.45);
+        const base = attacker.atk - Math.floor(defender.def * DEFENSE_MITIGATION);
         const variance = Math.floor(Math.random() * 5);
-        return Math.max(4, base + variance);
+        return Math.max(MIN_DAMAGE, base + variance);
       }
 
       function takeTurn(attacker, defender, sideLabel) {
@@ -257,7 +259,7 @@
         appendLog(`Enemy squad formed: ${enemyTeam.map((f) => f.name).join(', ')}`);
 
         let turn = 1;
-        while (nextAlive(playerTeam) && nextAlive(enemyTeam) && turn < 500) {
+        while (nextAlive(playerTeam) && nextAlive(enemyTeam) && turn < MAX_TURNS) {
           const ally = nextAlive(playerTeam);
           const foe = nextAlive(enemyTeam);
           if (!ally || !foe) break;
