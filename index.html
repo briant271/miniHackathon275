@@ -111,8 +111,13 @@
       ];
 
       const baseStats = { hp: 50, atk: 10, def: 8, spd: 8 };
+      const HP_CHAR_MODIFIER = 6;
+      const ATK_CHAR_MODIFIER = 4;
+      const DEF_CHAR_MODIFIER = 3;
+      const SPD_CHAR_MODIFIER = 5;
       const DEFENSE_MITIGATION = 0.45;
       const MIN_DAMAGE = 4;
+      const DAMAGE_VARIANCE = 5;
       const MAX_TURNS = 500;
       let playerStack = [];
 
@@ -130,10 +135,10 @@
 
         for (const char of lower) {
           const code = char.charCodeAt(0);
-          stats.hp += code % 6;
-          stats.atk += code % 4;
-          stats.def += code % 3;
-          stats.spd += code % 5;
+          stats.hp += code % HP_CHAR_MODIFIER;
+          stats.atk += code % ATK_CHAR_MODIFIER;
+          stats.def += code % DEF_CHAR_MODIFIER;
+          stats.spd += code % SPD_CHAR_MODIFIER;
         }
 
         keywordTraits.forEach((trait) => {
@@ -225,7 +230,7 @@
 
       function calculateDamage(attacker, defender) {
         const base = attacker.atk - Math.floor(defender.def * DEFENSE_MITIGATION);
-        const variance = Math.floor(Math.random() * 5);
+        const variance = Math.floor(Math.random() * DAMAGE_VARIANCE);
         return Math.max(MIN_DAMAGE, base + variance);
       }
 
@@ -259,7 +264,7 @@
         appendLog(`Enemy squad formed: ${enemyTeam.map((f) => f.name).join(', ')}`);
 
         let turn = 1;
-        while (nextAlive(playerTeam) && nextAlive(enemyTeam) && turn < MAX_TURNS) {
+        while (nextAlive(playerTeam) && nextAlive(enemyTeam) && turn <= MAX_TURNS) {
           const ally = nextAlive(playerTeam);
           const foe = nextAlive(enemyTeam);
           if (!ally || !foe) break;
@@ -275,7 +280,7 @@
             if (ally.hp > 0) takeTurn(ally, foe, 'Your');
           }
 
-          turn += 1;
+          turn++;
         }
 
         const playerAlive = nextAlive(playerTeam);
