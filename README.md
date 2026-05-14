@@ -4,7 +4,7 @@
 
 This project deploys as a static site with GitHub Pages via:
 
-- `/home/runner/work/miniHackathon275/miniHackathon275/.github/workflows/deploy-pages.yml`
+- `.github/workflows/deploy-pages.yml`
 
 ### One-time repo setup
 
