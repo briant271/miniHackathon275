@@ -158,20 +158,35 @@
       }
 
       function renderFighterCard(fighter) {
-        return `<div class="border-4 border-slate-800 bg-slate-950 p-2">
-          <p class="text-cyan-200">${fighter.name}</p>
-          <p>HP ${fighter.hp}/${fighter.maxHp} | ATK ${fighter.atk} | DEF ${fighter.def} | SPD ${fighter.spd}</p>
-        </div>`;
+        const card = document.createElement('div');
+        card.className = 'border-4 border-slate-800 bg-slate-950 p-2';
+
+        const name = document.createElement('p');
+        name.className = 'text-cyan-200';
+        name.textContent = fighter.name;
+
+        const stats = document.createElement('p');
+        stats.textContent = `HP ${fighter.hp}/${fighter.maxHp} | ATK ${fighter.atk} | DEF ${fighter.def} | SPD ${fighter.spd}`;
+
+        card.appendChild(name);
+        card.appendChild(stats);
+        return card;
       }
 
       function renderStacks(enemyStack = []) {
-        playerStackEl.innerHTML = playerStack.length
-          ? playerStack.map(renderFighterCard).join('')
-          : '<p class="text-slate-400">No tech selected yet.</p>';
+        playerStackEl.innerHTML = '';
+        if (playerStack.length) {
+          playerStack.forEach((fighter) => playerStackEl.appendChild(renderFighterCard(fighter)));
+        } else {
+          playerStackEl.innerHTML = '<p class="text-slate-400">No tech selected yet.</p>';
+        }
 
-        enemyStackEl.innerHTML = enemyStack.length
-          ? enemyStack.map(renderFighterCard).join('')
-          : '<p class="text-slate-400">Enemy appears when battle starts.</p>';
+        enemyStackEl.innerHTML = '';
+        if (enemyStack.length) {
+          enemyStack.forEach((fighter) => enemyStackEl.appendChild(renderFighterCard(fighter)));
+        } else {
+          enemyStackEl.innerHTML = '<p class="text-slate-400">Enemy appears when battle starts.</p>';
+        }
       }
 
       function appendLog(line) {
