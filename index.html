@@ -257,14 +257,17 @@
 
         clearLog();
 
-        const playerTeam = playerStack.map((fighter) => ({ ...fighter, hp: fighter.maxHp }));
+        const playerTeam = playerStack.map((fighter) => ({
+          ...fighter,
+          hp: fighter.maxHp
+        }));
         const enemyTeam = generateEnemyStack(Math.max(1, playerTeam.length));
 
         appendLog('=== ENCOUNTER START ===');
         appendLog(`Enemy squad formed: ${enemyTeam.map((f) => f.name).join(', ')}`);
 
         let turn = 1;
-        while (nextAlive(playerTeam) && nextAlive(enemyTeam) && turn <= MAX_TURNS) {
+        while (turn <= MAX_TURNS) {
           const ally = nextAlive(playerTeam);
           const foe = nextAlive(enemyTeam);
           if (!ally || !foe) break;
@@ -290,8 +293,10 @@
           appendLog('🏆 Victory! Your tech stack dominates the battlefield.');
         } else if (!playerAlive && enemyAlive) {
           appendLog('💀 Defeat! Enemy stack overpowers your team.');
+        } else if (turn > MAX_TURNS && playerAlive && enemyAlive) {
+          appendLog('⚖️ Draw! Battle reached the turn limit.');
         } else {
-          appendLog('⚖️ Draw! Battle timeout reached.');
+          appendLog('⚖️ Draw! Both teams are down.');
         }
 
         appendLog('=== ENCOUNTER END ===');
